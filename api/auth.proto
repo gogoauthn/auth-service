@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "./;authpb";
+
+// The AuthService provides RPCs for handling various user authentication needs.
+service AuthService {
+  // Traditional email/password login
+  rpc Login(LoginRequest) returns (LoginResponse);
+  
+  // Refresh session token
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+  
+  // Logout the user
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+  
+  // Reset password
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+  
+  // Sign up for a new account
+  rpc SignUp(SignUpRequest) returns (SignUpResponse);
+  
+  // Sign in with a social account like Google, Facebook, or GitHub
+  rpc SocialSignIn(SocialSignInRequest) returns (SocialSignInResponse);
+}
+
+// Request and response messages
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  bool success = 1;
+  string token = 2;
+  string refreshToken = 3;
+  string errorMessage = 4;
+}
+
+message RefreshTokenRequest {
+  string refreshToken = 1;
+}
+
+message RefreshTokenResponse {
+  bool success = 1;
+  string token = 2;
+  string newRefreshToken = 3;
+  string errorMessage = 4;
+}
+
+message LogoutRequest {
+  string userId = 1;
+}
+
+message LogoutResponse {
+  bool success = 1;
+  string errorMessage = 2;
+}
+
+message ResetPasswordRequest {
+  string email = 1;
+}
+
+message ResetPasswordResponse {
+  bool success = 1;
+  string errorMessage = 2;
+}
+
+message SignUpRequest {
+  string email = 1;
+  string password = 2;
+  // Include additional fields as necessary (e.g., username, phone number)
+}
+
+message SignUpResponse {
+  bool success = 1;
+  string userId = 2;
+  string errorMessage = 3;
+}
+
+message SocialSignInRequest {
+  string provider = 1; // e.g., "google", "facebook", "github"
+  string token = 2; // Token obtained from the social provider
+}
+
+message SocialSignInResponse {
+  bool success = 1;
+  string userId = 2;
+  string authToken = 3; // Your service's auth token for the user
+  string refreshToken = 4;
+  string errorMessage = 5;
+}
